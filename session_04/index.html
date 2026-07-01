@@ -1,0 +1,21 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input id="search" type="text">
+    <button onclick="search()">tìm kiếm</button>
+     <script>
+
+        function search() {
+            let keyword = document.getElementById("search")
+            //  khi search gọi API tìm tiếm
+           fetch(`http://127.0.0.1:8000/search?keyword=${keyword}`)
+
+        }
+     </script>
+</body>
+</html>
