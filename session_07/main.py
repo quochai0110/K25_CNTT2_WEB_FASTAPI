@@ -61,3 +61,14 @@ def create_student(student: Student):
     thêm sinh viên thành công: 201
     thêm sinh viên thất bại:  400 bad request 
 """
+""" 
+
+CẤU TRÚC API RESPONSE
+
+5 THUỘC TÍNH CHÍNH:
+1: SUCCESS : THÔNG BÁO THÀNH CÔNG HOẶC THẤT BẠI
+2: MESSAGE : THÔNG BÁO MÔ TẢ KẾT QUẢ TRẢ VỀ
+3: DATA    : DỮ LIỆU CHÍNH TRẢ VỀ
+4: ERRORS  : CHI TIẾT BUG
+5: META    : DỮ LIỆU ĐÍNH KÈM THÊM (PHÂN TRANG) 
+"""
