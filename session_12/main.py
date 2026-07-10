@@ -5,6 +5,7 @@ from database import SessionLocal
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 from models  import Product
+import service
 app = FastAPI()
 @app.get("/")
 def home():
@@ -27,7 +28,7 @@ def get_db():
 # VIẾT API LẤY DANH SÁCH SẢN PHẨM
 @app.get("/products")
 def get_products(db:Session = Depends(get_db)):
-    products = db.query(Product).all()
+    products = service.get_products(db)
     return {
         "message":"lấy danh sách sản phẩm thành công!",
         "data"   : products
@@ -36,8 +37,7 @@ def get_products(db:Session = Depends(get_db)):
 
 @app.get("/products/{product_id}")
 def get_product_detail(product_id:int, db:Session = Depends(get_db)):
-    product = db.query(Product).filter(Product.id == product_id).first()
-    
+    product = service.get_product_detail(product_id,db)
     if product is None:
         raise HTTPException(
             status_code= 404,
@@ -50,39 +50,18 @@ def get_product_detail(product_id:int, db:Session = Depends(get_db)):
 #  VIẾT API THÊM SẢN PHẨM
 @app.post("/products")
 def add_product(product: ProductCreate, db:Session = Depends(get_db)):
-    new_product = Product(
-        name  = product.name,
-        price = product.price
-    )
-    db.add(new_product)
-    db.commit()
-    db.refresh(new_product)
-    return {
-        "message":"thêm sản phẩm thành công!",
-        "data"   : new_product
-    }
+    service.add_product(product,db)
 
 # VIẾT API XÓA SẢN PHẨM
 @app.delete("/products/{product_id}")
 def delete_product(product_id:int, db:Session = Depends(get_db)):
-    product = db.query(Product).filter(Product.id == product_id ).first()
-    if product is None:
-        raise HTTPException(
-            status_code= 404,
-            detail= "sản phẩm không tồn tại!"
-        )
-    db.delete(product)
-    db.commit()
-    return {
-        "message":"xóa sản phẩm thành công!",
-        "data"   :product
-       }
+    service.delete_product(product_id,db)
 # VIẾT API CẬP NHẬT
 
 @app.put("/products/{product_id}")
 def update_product(product_id:int, update_product:ProductCreate, db:Session = Depends(get_db)):
     # tìm kiếm xem có tồn tại sản phẩm hay không mới đi cập nhật
-    product = db.query(Product).filter(Product.id == product_id) .first()
+    product = service.update_product(product_id,update_product,db)
     if product is None:
         raise HTTPException(
             status_code= 404 ,
